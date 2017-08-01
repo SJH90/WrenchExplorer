@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class SaveCUbe : MonoBehaviour {
     public bool isSave;
-    ObjectListData[] saveDatas;
-    ObjectListData[] loadDatas;
-
+    StageObjectData saveDatas;
+    StageObjectData loadDatas;
     // Use this for initialization
     void Start () {
-        saveDatas = new ObjectListData[10];
+        saveDatas.objectList = new ObjectListData[10];
         for(int i = 0; i < 10; i++)
         {
-            saveDatas[i].position = Vector3.up * i;
-            saveDatas[i].rotation = Vector3.down * i;
-            saveDatas[i].essential = false;
+            saveDatas.objectList[i].position = Vector3.up * i;
+            saveDatas.objectList[i].rotation = Vector3.down * i;
+            saveDatas.objectList[i].essential = false;
         }
 	}
 	
@@ -25,13 +24,14 @@ public class SaveCUbe : MonoBehaviour {
     private void OnCollisionEnter(Collision collision)
     {
         if (isSave)
-            DataManager.objectListSave(saveDatas,"test");
+            //print(DataManager.objectListSave(saveDatas,"test"));
+            DataManager.SaveToFile(saveDatas, "test");
         else
         {
-            loadDatas = DataManager.obejctListLoad("test");
+            loadDatas = DataManager.LoadToFile<StageObjectData>("test");
             for (int i = 0; i < 10; i++)
             {
-                print(i + " | " + loadDatas[i].position +" | " + loadDatas[i].rotation + " | " + (loadDatas[i].essential));
+                print(i + " | " + loadDatas.objectList[i].position + " | " + loadDatas.objectList[i].rotation + " | " + (loadDatas.objectList[i].essential));
 
             }
         }

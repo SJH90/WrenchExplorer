@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 
 public class Test : MonoBehaviour {
-    LoadObjectData data;
+    
 
     // Use this for initialization
     void Start () {

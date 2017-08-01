@@ -29,9 +29,19 @@ public struct StageObjectData
     public int number;
     //터레인 데이터 이름
     public string turreinName;
+    public int objectSize;
     //오브젝트 리스트
-    ObjectListData[] objectList;
+    public ObjectListData[] objectList;
 
+}
+//2017-08-01 SSK
+//UserMadeOjectData Class
+[Serializable]
+public class UserMadeOjectData
+{
+    //public int objectSize;
+    public ObjectListData[] objectList;
+    public KeyValuePair<int, int>[] jointList;
 }
 
 
@@ -98,26 +108,104 @@ public struct SerializableVector3
         return new SerializableVector3(rValue.x, rValue.y, rValue.z);
     }
 }
+/// <summary>
+/// Since unity doesn't flag the Quaternion as serializable, we
+/// need to create our own version. This one will automatically convert
+/// between Quaternion and SerializableQuaternion
+/// </summary>
+[System.Serializable]
+public struct SerializableQuaternion
+{
+    /// <summary>
+    /// x component
+    /// </summary>
+    public float x;
 
+    /// <summary>
+    /// y component
+    /// </summary>
+    public float y;
+
+    /// <summary>
+    /// z component
+    /// </summary>
+    public float z;
+
+    /// <summary>
+    /// w component
+    /// </summary>
+    public float w;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="rX"></param>
+    /// <param name="rY"></param>
+    /// <param name="rZ"></param>
+    /// <param name="rW"></param>
+    public SerializableQuaternion(float rX, float rY, float rZ, float rW)
+    {
+        x = rX;
+        y = rY;
+        z = rZ;
+        w = rW;
+    }
+
+    /// <summary>
+    /// Returns a string representation of the object
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        return String.Format("[{0}, {1}, {2}, {3}]", x, y, z, w);
+    }
+
+    /// <summary>
+    /// Automatic conversion from SerializableQuaternion to Quaternion
+    /// </summary>
+    /// <param name="rValue"></param>
+    /// <returns></returns>
+    public static implicit operator Quaternion(SerializableQuaternion rValue)
+    {
+        return new Quaternion(rValue.x, rValue.y, rValue.z, rValue.w);
+    }
+
+    /// <summary>
+    /// Automatic conversion from Quaternion to SerializableQuaternion
+    /// </summary>
+    /// <param name="rValue"></param>
+    /// <returns></returns>
+    public static implicit operator SerializableQuaternion(Quaternion rValue)
+    {
+        return new SerializableQuaternion(rValue.x, rValue.y, rValue.z, rValue.w);
+    }
+}
 
 //2017-07-28 SSK
 //dataManager Calss
 public static class DataManager  {
-    public static void objectListSave(ObjectListData[] data,string fileName)
+    //SaveToFile
+    //data오브젝트를 FileName파일에 쓴다
+    public static string SaveToFile(object data,string fileName)
     {
-        BinaryFormatter binaryFormatter = new BinaryFormatter();
-        FileStream fileStream = new FileStream(fileName, FileMode.Create);
-        binaryFormatter.Serialize(fileStream, data);
+        
+        StreamWriter fileStream = new StreamWriter(fileName);
+        string json = JsonUtility.ToJson(data);
+        fileStream.Write (json);
         fileStream.Close();
+        return json;
     }
-
-    public static ObjectListData[] obejctListLoad(string fileName)
+    //LoadToFile
+    //FileName파일데이터를 Templete형식의 데이터로 읽어온다.
+    public static Templete LoadToFile<Templete>(string fileName)
     {
-        BinaryFormatter binaryFormatter = new BinaryFormatter();
-        FileStream fileStream = new FileStream(fileName, FileMode.Open);
-        ObjectListData[] loadedData;
-        loadedData=(ObjectListData[])binaryFormatter.Deserialize(fileStream);
+
+        StreamReader fileStream = new StreamReader(fileName);
+        string json = fileStream.ReadLine();
+        Templete loadedData = JsonUtility.FromJson<Templete>(json);
         fileStream.Close();
         return loadedData;
     }
+
+    
 }
