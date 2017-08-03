@@ -1,0 +1,66 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class EditManagerScript : MonoBehaviour {
+
+
+
+    [SerializeField]    private GameObject Obj1;
+    [SerializeField]    private GameObject Obj1pre;
+    [SerializeField]    private GameObject Obj2;
+    [SerializeField]    private GameObject Obj2pre;
+
+    public GameObject selectedObject;
+    public GameObject selectedObjectprev;
+    public Quaternion selectedObjectRotate;
+
+
+    private void Awake()
+    {
+        selectedObject = Obj1;
+        selectedObjectprev = Obj1pre;
+        selectedObjectRotate = Quaternion.Euler(new Vector3(0, 0, 0));
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            selectedObject = Obj1;
+            selectedObjectprev = Obj1pre;
+        }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            selectedObject = Obj2;
+            selectedObjectprev = Obj2pre;
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            selectedObject = null;
+            selectedObjectprev = null;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            selectedObjectRotate *= Quaternion.Euler(new Vector3(0, 0, 90));
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            selectedObjectRotate *= Quaternion.Euler(new Vector3(90, 0, 0));
+        }
+
+        StageRotate();
+    }
+
+    private void StageRotate()
+    {
+        float speed = 5f;
+
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+
+        transform.RotateAround(Vector3.zero, Vector3.up, -h * speed);
+        transform.RotateAround(Vector3.zero, Vector3.right, -v * speed);
+    }
+}
