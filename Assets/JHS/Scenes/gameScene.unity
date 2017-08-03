@@ -156,8 +156,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Obj1: {fileID: 1887789888127516, guid: ed7929c610c0a66408ae2b95ae72f4ef, type: 2}
   Obj1pre: {fileID: 1311438786179934, guid: f850c29f78b14094eaa6c4b4522bab9c, type: 2}
-  Obj2: {fileID: 1887789888127516, guid: ed7929c610c0a66408ae2b95ae72f4ef, type: 2}
-  Obj2pre: {fileID: 1311438786179934, guid: f850c29f78b14094eaa6c4b4522bab9c, type: 2}
+  Obj2: {fileID: 1566463649839662, guid: 160d45479d7000c448bebbd7cb7619c2, type: 2}
+  Obj2pre: {fileID: 1704418024271814, guid: a496ea29811a1c44db7a4db7f10c6162, type: 2}
   selectedObject: {fileID: 0}
   selectedObjectprev: {fileID: 0}
   selectedObjectRotate: {x: 0, y: 0, z: 0, w: 0}
