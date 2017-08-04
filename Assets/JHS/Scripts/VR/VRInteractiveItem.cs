@@ -5,10 +5,10 @@ using System;
 public class VRInteractiveItem : MonoBehaviour {
     
     public event Action OnEnter;
-    public event Action OnOver;
+    public event Action<RaycastHit> OnOver;
     public event Action OnExit;
 
-    public event Action OnClick;
+    public event Action<RaycastHit> OnClick;
     public event Action OnCancel;
     
     public void Enter()
@@ -16,20 +16,20 @@ public class VRInteractiveItem : MonoBehaviour {
         if (OnEnter != null)
             OnEnter();
     }
-    public void Over()
+    public void Over(RaycastHit hit)
     {
         if (OnOver != null)
-            OnOver();
+            OnOver.DynamicInvoke(hit);
     }
     public void Exit()
     {
         if (OnExit != null)
             OnExit();
     }
-    public void Click()
+    public void Click(RaycastHit hit)
     {
         if (OnClick != null)
-            OnClick();
+            OnClick(hit);
     }
     public void Cancel()
     {

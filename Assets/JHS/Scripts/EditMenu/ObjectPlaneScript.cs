@@ -27,7 +27,7 @@ public class ObjectPlaneScript : MonoBehaviour {
             previewObject = Instantiate(m_EMScript.selectedObjectprev);
     }
 
-    public void HandleOver()
+    public void HandleOver(RaycastHit hit)
     {
         if(previewObject != null)
         {
@@ -42,7 +42,7 @@ public class ObjectPlaneScript : MonoBehaviour {
             Destroy(previewObject);
     }
 
-    public void HandleClick()
+    public void HandleClick(RaycastHit hit)
     {
         Destroy(previewObject);
         m_EditManager.AddObject(transform);

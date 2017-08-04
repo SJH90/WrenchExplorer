@@ -16,7 +16,7 @@ using UnityEngine;
     
 
         public event Action<SwipeDirection> OnSwipe;                // Called every frame passing in the swipe, including if there is no swipe.
-        public event Action OnClick;                                // Called when Fire1 is released and it's not a double click.
+        public event Action <RaycastHit>OnClick;                                // Called when Fire1 is released and it's not a double click.
         public event Action OnDown;                                 // Called when Fire1 is pressed.
         public event Action OnUp;                                   // Called when Fire1 is released.
         public event Action OnDoubleClick;                          // Called when a double click is detected.
@@ -84,9 +84,10 @@ using UnityEngine;
                 // If anything has subscribed to OnUp call it.
                 if (OnUp != null)
                     OnUp();
-
+                /*
                 if (OnClick != null)
                     OnClick();
+                */
                 /*
                 // If the time between the last release of Fire1 and now is less
                 // than the allowed double click time then it's a double click.

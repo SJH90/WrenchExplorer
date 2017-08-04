@@ -63,16 +63,21 @@ public class VREyeRaycast : MonoBehaviour {
         else
         {
             if (m_CurrentInteractiveItem != null)
-                m_CurrentInteractiveItem.Over();
+                m_CurrentInteractiveItem.Over(hit);
+        }
+        if (Input.GetButtonUp("Fire1"))
+        {
+            if (m_CurrentInteractiveItem != null)
+                m_CurrentInteractiveItem.Click(hit);
         }
     }
 
-    void HandleClick()
+    void HandleClick(RaycastHit hit)
     {
 
         if (m_CurrentInteractiveItem != null)
         {
-            m_CurrentInteractiveItem.Click();
+            m_CurrentInteractiveItem.Click(hit);
         }
 
 

@@ -13,7 +13,7 @@ public class springTest : MonoBehaviour {
 	void Update () {
 
         spring.axis = new Vector3(1, 1, 0);
-        print(spring.axis);
+        //print(spring.axis);
         if (Input.GetKey(KeyCode.X))
         {
             spring.connectedBody.AddForce(Vector3.down * 1000);

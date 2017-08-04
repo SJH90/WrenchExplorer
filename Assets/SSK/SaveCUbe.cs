@@ -31,7 +31,7 @@ public class SaveCUbe : MonoBehaviour {
             loadDatas = DataManager.LoadToFile<StageObjectData>("test");
             for (int i = 0; i < 10; i++)
             {
-                print(i + " | " + loadDatas.objectList[i].position + " | " + loadDatas.objectList[i].rotation + " | " + (loadDatas.objectList[i].essential));
+                //print(i + " | " + loadDatas.objectList[i].position + " | " + loadDatas.objectList[i].rotation + " | " + (loadDatas.objectList[i].essential));
 
             }
         }
