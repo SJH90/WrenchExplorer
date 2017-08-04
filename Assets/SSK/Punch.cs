@@ -11,7 +11,7 @@ public class Punch : MonoBehaviour {
         spring = GetComponent<SpringJoint>();
 
     }
-    float force = 2000;
+    float force = 50000;
 	// Update is called once per frame
 	void Update () {
 		
@@ -26,6 +26,6 @@ public class Punch : MonoBehaviour {
     public void punch()
     {
         print("punch!");
-        rigid.AddForce(rigid.mass* force* transform.forward);
+        rigid.AddForce(force* transform.forward);
     }
 }

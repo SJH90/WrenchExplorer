@@ -7,12 +7,13 @@ public class ObjectPlaneScript : MonoBehaviour {
     public VRInteractiveItem m_VRInteractiveItem;
     public EditManagerScript m_EMScript;
     public GameObject previewObject;
+    EditManagerScript m_EditManager;
 
     private void OnEnable()
     {
         m_VRInteractiveItem = transform.GetComponent<VRInteractiveItem>();
         m_EMScript = transform.root.GetComponent<EditManagerScript>();
-
+        m_EditManager = GetComponentInParent<EditManagerScript>();
         m_VRInteractiveItem.OnEnter += HandleEnter;
         m_VRInteractiveItem.OnOver += HandleOver;
         m_VRInteractiveItem.OnExit += HandleExit;
@@ -43,15 +44,8 @@ public class ObjectPlaneScript : MonoBehaviour {
 
     public void HandleClick()
     {
-        if (m_EMScript.selectedObject != null)
-        {
-            GameObject newObj = Instantiate(m_EMScript.selectedObject, transform.root);
-            newObj.transform.position = transform.position;
-            newObj.transform.rotation = transform.root.rotation * m_EMScript.selectedObjectRotate;
-        }else
-        {
-            Destroy(transform.parent.gameObject);
-        }
+        Destroy(previewObject);
+        m_EditManager.AddObject(transform);
     }
 
 }

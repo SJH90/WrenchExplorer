@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class gongguligi : MonoBehaviour {
-    SpringJoint[] springs;
+    public CharacterJoint[] springs;
     Punch[] punchs;
     Rigidbody[] rigids;
     public Transform head;
     HingeJoint[] hingeJoints;
+    float ch;
+    float cv;
+
     // Use this for initialization
     void Start () {
         rigids = GetComponentsInChildren<Rigidbody>();
-        springs = GetComponentsInChildren<SpringJoint>();
+        //springs = GetComponentsInChildren<SpringJoint>();
         punchs = GetComponentsInChildren<Punch>();
         hingeJoints = GetComponentsInChildren<HingeJoint>();
+        ch = 10000;
+        cv = 800;
     }
     
 	// Update is called once per frame
@@ -28,14 +33,14 @@ public class gongguligi : MonoBehaviour {
             rigid.AddTorque(hinge.connectedBody.transform.rotation * 
                 Vector3.Cross(hinge.connectedAnchor, Vector3.forward) *
                 hinge.axis.x *
-                h * 2000);
+                h * ch);
             /*
             print(hinge.connectedBody.transform.rotation*
                 Vector3.Cross(hinge.connectedAnchor, Vector3.forward) *
                 hinge.axis.x *
                 -h * 800);
                 */
-            rigid.AddTorque(hinge.connectedBody.transform.rotation * hinge.connectedAnchor.normalized * hinge.axis.x * -v * 800);
+            rigid.AddTorque(hinge.connectedBody.transform.rotation * hinge.connectedAnchor.normalized * hinge.axis.x * -v * cv);
         }
         if (Input.GetKey(KeyCode.Z))
         {

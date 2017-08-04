@@ -14,13 +14,14 @@ public class EditManagerScript : MonoBehaviour {
     public GameObject selectedObject;
     public GameObject selectedObjectprev;
     public Quaternion selectedObjectRotate;
-
+    EditManagerScript m_EMScript;
 
     private void Awake()
     {
         selectedObject = Obj1;
         selectedObjectprev = Obj1pre;
         selectedObjectRotate = Quaternion.Euler(new Vector3(0, 0, 0));
+        m_EMScript = GetComponent<EditManagerScript>();
     }
 
     private void Update()
@@ -62,5 +63,19 @@ public class EditManagerScript : MonoBehaviour {
 
         transform.RotateAround(Vector3.zero, Vector3.up, -h * speed);
         transform.RotateAround(Vector3.zero, Vector3.right, -v * speed);
+    }
+    public void AddObject(Transform SelectedObject)
+    {
+        if (m_EMScript.selectedObject != null)
+        {
+            GameObject newObj = Instantiate(m_EMScript.selectedObject, SelectedObject.root);
+            newObj.transform.position = SelectedObject.position;
+            newObj.transform.rotation = SelectedObject.root.rotation * m_EMScript.selectedObjectRotate;
+        }
+        else
+        {
+            if(!SelectedObject.parent.GetComponent<ObjectScript>().isRoot)
+                Destroy(SelectedObject.parent.gameObject);
+        }
     }
 }
