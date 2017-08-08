@@ -9,6 +9,7 @@ public class ObjectManager : MonoBehaviour {
     public EditStageManager m_EMScript;
     public GameObject previewObject;
 
+
     public Vector3 Position
     {
         get
@@ -36,30 +37,24 @@ public class ObjectManager : MonoBehaviour {
 
     public void HandleEnter()
     {
-        
-        if (m_EMScript.selectedObjectprev != null)
-            previewObject = Instantiate(m_EMScript.selectedObjectprev,transform.parent);
+
+        if (m_EMScript.selectedObjectprev != null && m_EMScript.IsEdit)
+        {
+            previewObject = Instantiate(m_EMScript.selectedObjectprev, transform.parent);
+            previewObject.transform.rotation = transform.root.rotation*m_EMScript.selectedObjectRotate;
+        }
+
     }
 
     public void HandleOver(RaycastHit hit)
     {
-        /*
-        float cosX = Vector3.Dot(transform.forward.normalized, (-m_Camera.transform.forward).normalized);
-        float angleX= Mathf.Acos(cosX);
-        float cosY = Vector3.Dot(transform.up.normalized, m_Camera.transform.up.normalized);
-        float angleY = Mathf.Acos(cosY);
-        angleX *=Mathf.Rad2Deg;
-        angleY *= Mathf.Rad2Deg;
-        
-        print(angleX+","+angleY);
-        */
-
-        Vector3 view = getAddPosition(hit);
-        if (previewObject != null)
+        if (m_EMScript.IsEdit)
         {
-            //previewObject.transform.position = transform.position+ transform.TransformPoint(view/2);
-            previewObject.transform.position = transform.position + transform.TransformDirection(view);
-            //previewObject.transform.rotation = transform.root.rotation * m_EMScript.selectedObjectRotate;
+            Vector3 view = getAddPosition(hit);
+            if (previewObject != null)
+            {
+                previewObject.transform.position = transform.position + transform.TransformDirection(view);
+            }
         }
     }
 
@@ -71,9 +66,12 @@ public class ObjectManager : MonoBehaviour {
 
     public void HandleClick(RaycastHit hit)
     {
-        Vector3 view = getAddPosition(hit);
-        Destroy(previewObject);
-        m_EMScript.AddObject(transform, view);
+        if (m_EMScript.IsEdit)
+        {
+            Vector3 view = getAddPosition(hit);
+            Destroy(previewObject);
+            m_EMScript.AddObject(transform, transform.position + transform.TransformDirection(view));
+        }
     }
     Vector3 getAddPosition(RaycastHit hit)
     {

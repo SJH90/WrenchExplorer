@@ -3,24 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EditStageManager : MonoBehaviour {
-
-    // Use this for initialization
-    /*
-    [SerializeField]
-    private GameObject Obj1;
-    [SerializeField]
-    private GameObject Obj1pre;
-    [SerializeField]
-    private GameObject Obj2;
-    [SerializeField]
-    private GameObject Obj2pre;
-    */
+public class  EditStageManager : MonoBehaviour {
 
     public GameObject selectedObject;
     public GameObject selectedObjectprev;
     public Quaternion selectedObjectRotate;
-    EditStageManager m_EMScript;
     string StageName;
     int StageInt;
     [SerializeField]
@@ -31,12 +18,19 @@ public class EditStageManager : MonoBehaviour {
     Transform cam;
     bool isEdit;
     int ObjectSize;
+    public bool IsEdit
+    {
+        get
+        {
+            return isEdit;
+        }
+    }
     private void Awake()
     {
         selectedObject = prefabs[0];
         selectedObjectprev = prefabsPrev[0];
         selectedObjectRotate = Quaternion.Euler(new Vector3(0, 0, 0));
-        m_EMScript = GetComponent<EditStageManager>();
+        
         StageName = "Test";
         StageInt = -1;
         isEdit = true;
@@ -45,17 +39,21 @@ public class EditStageManager : MonoBehaviour {
 
     private void Update()
     {
-        
-        if (Input.GetKeyDown(KeyCode.M))
+        if (isEdit)
         {
-            jointTest();
+            EditKeyInput();
+            EditStageRotate();
         }
+        else
+        {
+            StageKeyInput();
+        }
+    }
+    private void EditKeyInput()
+    {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (isEdit)
-                StartStage();
-            else
-                StartEdit();
+             StartStage();
         }
         if (Input.GetKey(KeyCode.T))
         {
@@ -84,6 +82,7 @@ public class EditStageManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.F))
         {
             selectedObjectRotate *= Quaternion.Euler(new Vector3(0, 0, 90));
+            
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
@@ -97,10 +96,15 @@ public class EditStageManager : MonoBehaviour {
         {
             LoadObject(StageName);
         }
-        StageRotate();
     }
-
-    private void StageRotate()
+    void StageKeyInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartEdit();
+        }
+    }
+    private void EditStageRotate()
     {
         float speed = 5f;
 
@@ -110,22 +114,19 @@ public class EditStageManager : MonoBehaviour {
         transform.RotateAround(transform.position, Vector3.up, -h * speed);
         transform.RotateAround(transform.position, Vector3.right, -v * speed);
     }
-    public void AddObject(Transform SelectedObject, Vector3 view)
+    public void AddObject(Transform SelectedObject, Vector3 position)
     {
-        if (m_EMScript.selectedObject != null)
+        if (selectedObject != null)
         {
-            GameObject newObj = Instantiate(m_EMScript.selectedObject, SelectedObject.root);
+            GameObject newObj = Instantiate(selectedObject, SelectedObject.root);
             ObjectSize++;
-            newObj.name=selectedObject.name + ObjectSize;
+            newObj.name = selectedObject.name + ObjectSize;
 
-            newObj.transform.position = SelectedObject.position+ transform.TransformDirection(view);
-            newObj.transform.rotation = SelectedObject.root.rotation * m_EMScript.selectedObjectRotate;
-            FixedJoint newJoint = newObj.AddComponent<FixedJoint>();
-            newJoint.connectedBody = SelectedObject.GetComponent<Rigidbody>();
+            newObj.transform.position = position;
+            newObj.transform.rotation = SelectedObject.root.rotation * selectedObjectRotate;
         }
         else
         {
-            //print(SelectedObject);
             if (!SelectedObject.GetComponent<ObjectManager>().isRoot)
                 Destroy(SelectedObject.gameObject);
         }
@@ -139,15 +140,10 @@ public class EditStageManager : MonoBehaviour {
         ObjectListData[] objListData = new ObjectListData[objectList.Length];
         for(int i = 0; i < objectList.Length; i++)
         {
-            Joint joint = objectList[i].GetComponent<Joint>();
-            if (joint == null)
-                objListData[i] = new ObjectListData(objectList[i], 0, objectList[i].name);
-            else
-                objListData[i] = new ObjectListData(objectList[i],0, objectList[i].name,1, joint.connectedBody.name);
-            //print(objListData[i]+i.ToString());
+            objListData[i] = new ObjectListData(objectList[i], 0);
         }
         StageObjectData data = new StageObjectData(StageInt, name, objListData);
-        print(DataManager.SaveToFile(data, name));
+        DataManager.SaveToFile(data, name);
         transform.rotation = temp;
 
     }
@@ -162,31 +158,9 @@ public class EditStageManager : MonoBehaviour {
         }
         StageObjectData loaded = DataManager.LoadToFile<StageObjectData>(name);
         StageInt = loaded.number;
-        //StageName = loaded.turreinName;
-        
-        print(loaded.objectSize);
         for(int i = 0; i < loaded.objectSize; i++)
         {
             loaded.objectList[i].DataToObject(prefabs[loaded.objectList[i].type],gameObject.transform);
-        }
-        print("done!");
-
-
-    }
-    void jointTest()
-    {
-        Joint[] joint = transform.GetComponentsInChildren<Joint>();
-        foreach (var joint1 in joint)
-        {
-            try
-            {
-
-                print(joint1.connectedBody.name);
-            }
-            catch (Exception e)
-            {
-                print(e);
-            }
         }
     }
     public void ObejctChange(int index)
@@ -211,6 +185,7 @@ public class EditStageManager : MonoBehaviour {
         transform.rotation = Quaternion.Euler(Vector3.zero); 
         Rigidbody[] rigids = GetComponentsInChildren<Rigidbody>();
         SaveObject(StageName + "temp");
+        connectJoint();
         foreach (var rigid in rigids)
         {
             rigid.isKinematic = false;
@@ -221,17 +196,40 @@ public class EditStageManager : MonoBehaviour {
     }
     void StartEdit()
     {
-        /*
-        Quaternion temp = transform.rotation;
-        transform.rotation = Quaternion.Euler(Vector3.zero);
-        Rigidbody[] rigids = GetComponentsInChildren<Rigidbody>();
-        foreach (var rigid in rigids)
-        {
-            rigid.isKinematic = true;
-            rigid.useGravity = false;
-        }
-        */
         LoadObject(StageName + "temp");
         isEdit = true;
+    }
+    /*
+    void connectJoint()
+    {
+        ObjectManager[] objectList;
+        objectList = GetComponentsInChildren<ObjectManager>();
+        for(int i = 0; i < objectList.Length-1; i++)
+        {
+            for (int j = i+1; j < objectList.Length; j++)
+            {
+                if((objectList[i].Position - objectList[j].Position).magnitude <= 1.1f)
+                {
+                    FixedJoint fj= objectList[i].gameObject.AddComponent<FixedJoint>();
+                    fj.connectedBody = objectList[j].GetComponent<Rigidbody>();
+                }
+            }
+        }
+    }
+    */
+    void connectJoint()
+    {
+        ObjectManager[] objectList;
+        objectList = GetComponentsInChildren<ObjectManager>();
+        foreach(var currentObject in objectList) { 
+            RaycastHit hit;
+            Ray ray = new Ray(currentObject.transform.position, currentObject.transform.up);
+
+            if (Physics.Raycast(ray, out hit, 1.1f))
+            {
+                FixedJoint fj = currentObject.gameObject.AddComponent<FixedJoint>();
+                fj.connectedBody=hit.rigidbody;
+            }
+        }
     }
 }

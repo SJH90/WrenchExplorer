@@ -19,40 +19,23 @@ public struct ObjectListData
     public bool essential;
     public int type;
     public bool root;
-    public string name;
-    public int jointType;
-    public string connectedBody;
-    public ObjectListData(ObjectManager obj,int Type,string Name,int JointType,string ConnectedBody)
+    public ObjectListData(ObjectManager obj,int Type)
     {
         this.position = obj.Position;
         this.rotation = obj.Rotation;
         this.essential = obj.isEssential;
         this.type = Type;
         this.root = obj.isRoot;
-        this.name = Name;
-        this.jointType = JointType;
-        this.connectedBody = ConnectedBody;
-    }
-    public ObjectListData(ObjectManager obj, int Type, string Name)
-    {
-        this.position = obj.Position;
-        this.rotation = obj.Rotation;
-        this.essential = obj.isEssential;
-        this.type = Type;
-        this.root = obj.isRoot;
-        this.name = Name;
-        this.jointType = 0;
-        this.connectedBody = null;
     }
     public GameObject DataToObject(GameObject prefabs,Transform parent)
     {
         GameObject newObject = MonoBehaviour.Instantiate(prefabs,parent);
         newObject.transform.position = this.position;
         newObject.transform.rotation = Quaternion.Euler(this.rotation);
-        newObject.name = this.name;
         
         ObjectManager newManager = newObject.GetComponent<ObjectManager>();
 
+        /*
         Joint joint;
         switch (this.jointType)
         {
@@ -66,6 +49,7 @@ public struct ObjectListData
                 joint.connectedBody = parent.Find(connectedBody).GetComponent<Rigidbody>();
                 break;
         }
+        */
 
         newManager.isRoot = this.root;
         newManager.isEssential = this.essential;

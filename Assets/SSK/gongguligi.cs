@@ -5,7 +5,7 @@ using UnityEngine;
 public class gongguligi : MonoBehaviour {
     public CharacterJoint[] springs;
     Punch[] punchs;
-    Rigidbody[] rigids;
+    //Rigidbody[] rigids;
     public Transform head;
     HingeJoint[] hingeJoints;
     float ch;
@@ -13,7 +13,7 @@ public class gongguligi : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        rigids = GetComponentsInChildren<Rigidbody>();
+        //rigids = GetComponentsInChildren<Rigidbody>();
         //springs = GetComponentsInChildren<SpringJoint>();
         punchs = GetComponentsInChildren<Punch>();
         hingeJoints = GetComponentsInChildren<HingeJoint>();
