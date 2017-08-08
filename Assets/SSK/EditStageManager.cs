@@ -45,6 +45,7 @@ public class EditStageManager : MonoBehaviour {
 
     private void Update()
     {
+        
         if (Input.GetKeyDown(KeyCode.M))
         {
             jointTest();
@@ -143,47 +144,32 @@ public class EditStageManager : MonoBehaviour {
                 objListData[i] = new ObjectListData(objectList[i], 0, objectList[i].name);
             else
                 objListData[i] = new ObjectListData(objectList[i],0, objectList[i].name,1, joint.connectedBody.name);
-            print(objListData[i]+i.ToString());
+            //print(objListData[i]+i.ToString());
         }
         StageObjectData data = new StageObjectData(StageInt, name, objListData);
-        DataManager.SaveToFile(data, name);
+        print(DataManager.SaveToFile(data, name));
         transform.rotation = temp;
 
     }
     void LoadObject(string name)
     {
-
-        /*
-        Transform[] children=GetComponentsInChildren<Transform>();
-        foreach(var child in children) {
-            if (child.IsChildOf(transform))
-                Destroy(child);
-        }
-        */
+        
         transform.rotation = Quaternion.Euler(Vector3.zero);
         foreach (Transform child in transform)
         {
+            child.name = "Destroy";
             Destroy(child.gameObject);
         }
         StageObjectData loaded = DataManager.LoadToFile<StageObjectData>(name);
         StageInt = loaded.number;
-        StageName = loaded.turreinName;
+        //StageName = loaded.turreinName;
         
         print(loaded.objectSize);
         for(int i = 0; i < loaded.objectSize; i++)
         {
-            GameObject newObj= loaded.objectList[i].DataToObject(prefabs[loaded.objectList[i].type],gameObject.transform);
-            Joint joint = newObj.GetComponent<Joint>();
-            try
-            {
-                print(joint.connectedBody.name);
-            }
-            catch (Exception e)
-            {
-                print(e);
-            }
+            loaded.objectList[i].DataToObject(prefabs[loaded.objectList[i].type],gameObject.transform);
         }
-        
+        print("done!");
 
 
     }
@@ -246,7 +232,6 @@ public class EditStageManager : MonoBehaviour {
         }
         */
         LoadObject(StageName + "temp");
-        StageName.Replace("temp", "");
         isEdit = true;
     }
 }

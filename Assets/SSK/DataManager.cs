@@ -51,7 +51,7 @@ public struct ObjectListData
         newObject.transform.rotation = Quaternion.Euler(this.rotation);
         newObject.name = this.name;
         
-        ObjectManager newManager = newObject.AddComponent<ObjectManager>();
+        ObjectManager newManager = newObject.GetComponent<ObjectManager>();
 
         Joint joint;
         switch (this.jointType)
@@ -66,8 +66,8 @@ public struct ObjectListData
                 joint.connectedBody = parent.Find(connectedBody).GetComponent<Rigidbody>();
                 break;
         }
-        
 
+        newManager.isRoot = this.root;
         newManager.isEssential = this.essential;
         return newObject;
     }
