@@ -61,8 +61,8 @@ public class EditManagerScript : MonoBehaviour {
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        transform.RotateAround(Vector3.zero, Vector3.up, -h * speed);
-        transform.RotateAround(Vector3.zero, Vector3.right, -v * speed);
+        transform.RotateAround(transform.position, Vector3.up, -h * speed);
+        transform.RotateAround(transform.position, Vector3.right, -v * speed);
     }
     public void AddObject(Transform SelectedObject)
     {
