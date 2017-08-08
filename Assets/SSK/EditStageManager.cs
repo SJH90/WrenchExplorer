@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EditStageManager : MonoBehaviour {
 
     // Use this for initialization
-
+    /*
     [SerializeField]
     private GameObject Obj1;
     [SerializeField]
@@ -14,6 +15,7 @@ public class EditStageManager : MonoBehaviour {
     private GameObject Obj2;
     [SerializeField]
     private GameObject Obj2pre;
+    */
 
     public GameObject selectedObject;
     public GameObject selectedObjectprev;
@@ -21,28 +23,56 @@ public class EditStageManager : MonoBehaviour {
     EditStageManager m_EMScript;
     string StageName;
     int StageInt;
-    public GameObject[] prefabs;
+    [SerializeField]
+    GameObject[] prefabs;
+    [SerializeField]
+    GameObject[] prefabsPrev;
+    [SerializeField]
+    Transform cam;
+    bool isEdit;
+    int ObjectSize;
     private void Awake()
     {
-        selectedObject = Obj1;
-        selectedObjectprev = Obj1pre;
+        selectedObject = prefabs[0];
+        selectedObjectprev = prefabsPrev[0];
         selectedObjectRotate = Quaternion.Euler(new Vector3(0, 0, 0));
         m_EMScript = GetComponent<EditStageManager>();
         StageName = "Test";
         StageInt = -1;
+        isEdit = true;
+        ObjectSize = 1;
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            jointTest();
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (isEdit)
+                StartStage();
+            else
+                StartEdit();
+        }
+        if (Input.GetKey(KeyCode.T))
+        {
+            camMoveFront();
+        }
+        if (Input.GetKey(KeyCode.G))
+        {
+            camMoveBack();
+        }
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            selectedObject = Obj1;
-            selectedObjectprev = Obj1pre;
+            selectedObject = prefabs[0];
+            selectedObjectprev = prefabsPrev[0];
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
-            selectedObject = Obj2;
-            selectedObjectprev = Obj2pre;
+            selectedObject = prefabs[1];
+            selectedObjectprev = prefabsPrev[1];
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -60,11 +90,11 @@ public class EditStageManager : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
-            SaveObject();
+            SaveObject(StageName);
         }
         if (Input.GetKeyDown(KeyCode.P))
         {
-            LoadObject("Test");
+            LoadObject(StageName);
         }
         StageRotate();
     }
@@ -84,17 +114,22 @@ public class EditStageManager : MonoBehaviour {
         if (m_EMScript.selectedObject != null)
         {
             GameObject newObj = Instantiate(m_EMScript.selectedObject, SelectedObject.root);
+            ObjectSize++;
+            newObj.name=selectedObject.name + ObjectSize;
+
             newObj.transform.position = SelectedObject.position+ transform.TransformDirection(view);
             newObj.transform.rotation = SelectedObject.root.rotation * m_EMScript.selectedObjectRotate;
+            FixedJoint newJoint = newObj.AddComponent<FixedJoint>();
+            newJoint.connectedBody = SelectedObject.GetComponent<Rigidbody>();
         }
         else
         {
-            print(SelectedObject);
+            //print(SelectedObject);
             if (!SelectedObject.GetComponent<ObjectManager>().isRoot)
                 Destroy(SelectedObject.gameObject);
         }
     }
-    void SaveObject()
+    void SaveObject(string name)
     {
         Quaternion temp = transform.rotation;
         transform.rotation = Quaternion.Euler(Vector3.zero);
@@ -103,10 +138,15 @@ public class EditStageManager : MonoBehaviour {
         ObjectListData[] objListData = new ObjectListData[objectList.Length];
         for(int i = 0; i < objectList.Length; i++)
         {
-            objListData[i] = new ObjectListData(objectList[i],0);
+            Joint joint = objectList[i].GetComponent<Joint>();
+            if (joint == null)
+                objListData[i] = new ObjectListData(objectList[i], 0, objectList[i].name);
+            else
+                objListData[i] = new ObjectListData(objectList[i],0, objectList[i].name,1, joint.connectedBody.name);
+            print(objListData[i]+i.ToString());
         }
-        StageObjectData data = new StageObjectData(StageInt,StageName, objListData);
-        DataManager.SaveToFile(data, StageName);
+        StageObjectData data = new StageObjectData(StageInt, name, objListData);
+        DataManager.SaveToFile(data, name);
         transform.rotation = temp;
 
     }
@@ -128,13 +168,85 @@ public class EditStageManager : MonoBehaviour {
         StageObjectData loaded = DataManager.LoadToFile<StageObjectData>(name);
         StageInt = loaded.number;
         StageName = loaded.turreinName;
+        
         print(loaded.objectSize);
         for(int i = 0; i < loaded.objectSize; i++)
         {
-            print(loaded.objectList[i].DataToObject(prefabs[loaded.objectList[i].type],gameObject.transform));
-
+            GameObject newObj= loaded.objectList[i].DataToObject(prefabs[loaded.objectList[i].type],gameObject.transform);
+            Joint joint = newObj.GetComponent<Joint>();
+            try
+            {
+                print(joint.connectedBody.name);
+            }
+            catch (Exception e)
+            {
+                print(e);
+            }
         }
+        
 
 
+    }
+    void jointTest()
+    {
+        Joint[] joint = transform.GetComponentsInChildren<Joint>();
+        foreach (var joint1 in joint)
+        {
+            try
+            {
+
+                print(joint1.connectedBody.name);
+            }
+            catch (Exception e)
+            {
+                print(e);
+            }
+        }
+    }
+    public void ObejctChange(int index)
+    {
+        selectedObject = prefabs[index];
+        selectedObjectprev = prefabsPrev[index];
+
+    }
+    void camMoveFront()
+    {
+        if(cam.position.z - transform.position.z > 1)
+            cam.position -= Vector3.forward * 0.1f ;
+    }
+    void camMoveBack()
+    {
+        if (cam.position.z - transform.position.z < 20)
+            cam.position -= Vector3.back * 0.1f;
+    }
+    void StartStage()
+    {
+        Quaternion temp = transform.rotation;
+        transform.rotation = Quaternion.Euler(Vector3.zero); 
+        Rigidbody[] rigids = GetComponentsInChildren<Rigidbody>();
+        SaveObject(StageName + "temp");
+        foreach (var rigid in rigids)
+        {
+            rigid.isKinematic = false;
+            rigid.useGravity = true;
+        }
+        
+        isEdit = false;
+    }
+    void StartEdit()
+    {
+        /*
+        Quaternion temp = transform.rotation;
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+        Rigidbody[] rigids = GetComponentsInChildren<Rigidbody>();
+        foreach (var rigid in rigids)
+        {
+            rigid.isKinematic = true;
+            rigid.useGravity = false;
+        }
+        */
+        LoadObject(StageName + "temp");
+        StageName.Replace("temp", "");
+        isEdit = true;
     }
 }
