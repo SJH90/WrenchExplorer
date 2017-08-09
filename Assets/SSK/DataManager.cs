@@ -34,23 +34,7 @@ public struct ObjectListData
         newObject.transform.rotation = Quaternion.Euler(this.rotation);
         
         ObjectManager newManager = newObject.GetComponent<ObjectManager>();
-
-        /*
-        Joint joint;
-        switch (this.jointType)
-        {
-            case 1:
-                joint = newObject.AddComponent<FixedJoint>();
-                joint.connectedBody = parent.Find(connectedBody).GetComponent<Rigidbody>();
-                
-                break;
-            case 2:
-                joint = newObject.AddComponent<HingeJoint>();
-                joint.connectedBody = parent.Find(connectedBody).GetComponent<Rigidbody>();
-                break;
-        }
-        */
-
+        
         newManager.isRoot = this.root;
         newManager.isEssential = this.essential;
         return newObject;

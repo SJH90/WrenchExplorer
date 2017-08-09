@@ -8,6 +8,7 @@ public class ObjectManager : MonoBehaviour {
     public VRInteractiveItem m_VRInteractiveItem;
     public EditStageManager m_EMScript;
     public GameObject previewObject;
+    
 
 
     public Vector3 Position
@@ -37,40 +38,53 @@ public class ObjectManager : MonoBehaviour {
 
     public void HandleEnter()
     {
-
-        if (m_EMScript.selectedObjectprev != null && m_EMScript.IsEdit)
+        if (m_EMScript != null)
         {
-            previewObject = Instantiate(m_EMScript.selectedObjectprev, transform.parent);
-            previewObject.transform.rotation = transform.root.rotation*m_EMScript.selectedObjectRotate;
+            m_EMScript.m_CurrentObject = this;
+            if (m_EMScript.selectedObjectprev != null && m_EMScript.IsEdit && gameObject.tag != "Wheel")
+            {
+                previewObject = Instantiate(m_EMScript.selectedObjectprev, transform.parent);
+                previewObject.transform.rotation = transform.root.rotation * m_EMScript.selectedObjectRotate;
+            }
         }
 
     }
 
     public void HandleOver(RaycastHit hit)
     {
-        if (m_EMScript.IsEdit)
+        //print(gameObject + "Click!");
+        if (m_EMScript.IsEdit && gameObject.tag != "Wheel")
         {
             Vector3 view = getAddPosition(hit);
             if (previewObject != null)
             {
                 previewObject.transform.position = transform.position + transform.TransformDirection(view);
+                previewObject.transform.rotation = transform.root.rotation * m_EMScript.selectedObjectRotate;
             }
         }
     }
-
+    public void Refresh()
+    {
+        Destroy(previewObject);
+        previewObject = Instantiate(m_EMScript.selectedObjectprev, transform.parent);
+    }
     public void HandleExit()
     {
         if (previewObject != null)
             Destroy(previewObject);
+        if(m_EMScript != null)
+            m_EMScript.m_CurrentObject = null;
     }
 
     public void HandleClick(RaycastHit hit)
     {
+        //print(gameObject + "Click!");
         if (m_EMScript.IsEdit)
         {
             Vector3 view = getAddPosition(hit);
             Destroy(previewObject);
             m_EMScript.AddObject(transform, transform.position + transform.TransformDirection(view));
+           
         }
     }
     Vector3 getAddPosition(RaycastHit hit)

@@ -8,6 +8,7 @@ public class  EditStageManager : MonoBehaviour {
     public GameObject selectedObject;
     public GameObject selectedObjectprev;
     public Quaternion selectedObjectRotate;
+    public ObjectManager m_CurrentObject;
     string StageName;
     int StageInt;
     [SerializeField]
@@ -18,6 +19,12 @@ public class  EditStageManager : MonoBehaviour {
     Transform cam;
     bool isEdit;
     int ObjectSize;
+    [SerializeField]
+    GameObject Root;
+
+    [SerializeField]
+    List<Rigidbody> wheels;
+
     public bool IsEdit
     {
         get
@@ -35,6 +42,7 @@ public class  EditStageManager : MonoBehaviour {
         StageInt = -1;
         isEdit = true;
         ObjectSize = 1;
+        wheels = new List<Rigidbody>();
     }
 
     private void Update()
@@ -47,6 +55,7 @@ public class  EditStageManager : MonoBehaviour {
         else
         {
             StageKeyInput();
+            cam.transform.position = Root.transform.position + new Vector3(0, 5, -5);
         }
     }
     private void EditKeyInput()
@@ -63,15 +72,15 @@ public class  EditStageManager : MonoBehaviour {
         {
             camMoveBack();
         }
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            selectedObject = prefabs[0];
-            selectedObjectprev = prefabsPrev[0];
+            ObejctChange(0);
+
         }
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            selectedObject = prefabs[1];
-            selectedObjectprev = prefabsPrev[1];
+            ObejctChange(1);
+
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -79,12 +88,12 @@ public class  EditStageManager : MonoBehaviour {
             selectedObjectprev = null;
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             selectedObjectRotate *= Quaternion.Euler(new Vector3(0, 0, 90));
             
         }
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             selectedObjectRotate *= Quaternion.Euler(new Vector3(90, 0, 0));
         }
@@ -99,9 +108,11 @@ public class  EditStageManager : MonoBehaviour {
     }
     void StageKeyInput()
     {
+        StageMove();
         if (Input.GetKeyDown(KeyCode.Space))
         {
             StartEdit();
+            
         }
     }
     private void EditStageRotate()
@@ -113,22 +124,51 @@ public class  EditStageManager : MonoBehaviour {
 
         transform.RotateAround(transform.position, Vector3.up, -h * speed);
         transform.RotateAround(transform.position, Vector3.right, -v * speed);
+        
+    }
+    void StageMove()
+    {
+        float speed = 500f;
+
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
+        foreach (var current in wheels)
+        {
+            current.AddTorque(Root.transform.right * v * speed);
+            current.AddTorque(Root.transform.up * h * speed);
+        }
     }
     public void AddObject(Transform SelectedObject, Vector3 position)
     {
-        if (selectedObject != null)
+        //print(SelectedObject);
+        if (selectedObject != null && SelectedObject.tag !="Wheel")
         {
             GameObject newObj = Instantiate(selectedObject, SelectedObject.root);
+            if (newObj.tag == "Wheel")
+            {
+                wheels.Add(newObj.GetComponent<Rigidbody>());
+            }
             ObjectSize++;
             newObj.name = selectedObject.name + ObjectSize;
 
             newObj.transform.position = position;
             newObj.transform.rotation = SelectedObject.root.rotation * selectedObjectRotate;
         }
+        else if (selectedObject != null && SelectedObject.tag == "Wheel")
+        {
+
+        }
         else
         {
             if (!SelectedObject.GetComponent<ObjectManager>().isRoot)
+            {
+                if (SelectedObject.tag == "Wheel")
+                {
+                    wheels.Remove(SelectedObject.GetComponent<Rigidbody>());
+                }
                 Destroy(SelectedObject.gameObject);
+                ObjectSize--;
+            }
         }
     }
     void SaveObject(string name)
@@ -138,9 +178,13 @@ public class  EditStageManager : MonoBehaviour {
         ObjectManager[] objectList;
         objectList = GetComponentsInChildren<ObjectManager>();
         ObjectListData[] objListData = new ObjectListData[objectList.Length];
+        //print(objectList.Length);
         for(int i = 0; i < objectList.Length; i++)
         {
-            objListData[i] = new ObjectListData(objectList[i], 0);
+            if(objectList[i].tag == "Cube")
+                objListData[i] = new ObjectListData(objectList[i], 0);
+            if (objectList[i].tag == "Wheel")
+                objListData[i] = new ObjectListData(objectList[i], 1);
         }
         StageObjectData data = new StageObjectData(StageInt, name, objListData);
         DataManager.SaveToFile(data, name);
@@ -156,28 +200,41 @@ public class  EditStageManager : MonoBehaviour {
             child.name = "Destroy";
             Destroy(child.gameObject);
         }
+        wheels.Clear();
         StageObjectData loaded = DataManager.LoadToFile<StageObjectData>(name);
         StageInt = loaded.number;
         for(int i = 0; i < loaded.objectSize; i++)
         {
-            loaded.objectList[i].DataToObject(prefabs[loaded.objectList[i].type],gameObject.transform);
+            //if(loaded.objectList[i].type==1)
+            GameObject newObj= loaded.objectList[i].DataToObject(prefabs[loaded.objectList[i].type],gameObject.transform);
+            if (newObj.GetComponent<ObjectManager>().isRoot)
+            {
+                Root = newObj;
+            }
+            if (newObj.tag == "Wheel")
+            {
+                wheels.Add(newObj.GetComponent<Rigidbody>());
+            }
         }
     }
     public void ObejctChange(int index)
     {
         selectedObject = prefabs[index];
         selectedObjectprev = prefabsPrev[index];
-
+        if (m_CurrentObject != null)
+        {
+            m_CurrentObject.Refresh();
+        }
     }
     void camMoveFront()
     {
-        if(cam.position.z - transform.position.z > 1)
-            cam.position -= Vector3.forward * 0.1f ;
+        if(cam.position.x - transform.position.x > 1)
+            cam.position -= Vector3.left * 0.1f ;
     }
     void camMoveBack()
     {
-        if (cam.position.z - transform.position.z < 20)
-            cam.position -= Vector3.back * 0.1f;
+        if (cam.position.x - transform.position.x < 20)
+            cam.position -= Vector3.right * 0.1f;
     }
     void StartStage()
     {
@@ -191,11 +248,12 @@ public class  EditStageManager : MonoBehaviour {
             rigid.isKinematic = false;
             rigid.useGravity = true;
         }
-        
+        cam.transform.position = Root.transform.position +new Vector3(0, 0, -5);
         isEdit = false;
     }
     void StartEdit()
     {
+        cam.transform.position = new Vector3(0, 5, -5);
         LoadObject(StageName + "temp");
         isEdit = true;
     }
@@ -221,14 +279,23 @@ public class  EditStageManager : MonoBehaviour {
     {
         ObjectManager[] objectList;
         objectList = GetComponentsInChildren<ObjectManager>();
-        foreach(var currentObject in objectList) { 
+        foreach(var currentObject in objectList) {  
             RaycastHit hit;
             Ray ray = new Ray(currentObject.transform.position, currentObject.transform.up);
 
             if (Physics.Raycast(ray, out hit, 1.1f))
             {
-                FixedJoint fj = currentObject.gameObject.AddComponent<FixedJoint>();
-                fj.connectedBody=hit.rigidbody;
+                if(currentObject.gameObject.tag == "Cube"){
+                    FixedJoint fj = currentObject.gameObject.AddComponent<FixedJoint>();
+                    fj.connectedBody = hit.rigidbody;
+                }
+                //print(currentObject.gameObject.tag+ hit.rigidbody.gameObject.tag);
+                if(currentObject.gameObject.tag == "Wheel" && hit.rigidbody.gameObject.tag=="Cube")
+                {
+                    HingeJoint fj = currentObject.gameObject.AddComponent<HingeJoint>();
+                    fj.connectedBody = hit.rigidbody;
+                    fj.axis = Vector3.up;
+                }
             }
         }
     }
