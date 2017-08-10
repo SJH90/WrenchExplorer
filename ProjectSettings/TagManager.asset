@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Terrain
-  - Rock1
+  - Wheel
+  - Cube
   layers:
   - Default
   - TransparentFX
@@ -15,8 +15,8 @@ TagManager:
   - UI
   - 
   - 
-  - Terrain
-  - Rock1
+  - 
+  - 
   - 
   - 
   - 

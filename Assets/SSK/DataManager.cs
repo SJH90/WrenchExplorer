@@ -17,6 +17,28 @@ public struct ObjectListData
     public SerializableVector3 position;
     public SerializableVector3 rotation;
     public bool essential;
+    public int type;
+    public bool root;
+    public ObjectListData(ObjectManager obj,int Type)
+    {
+        this.position = obj.Position;
+        this.rotation = obj.Rotation;
+        this.essential = obj.isEssential;
+        this.type = Type;
+        this.root = obj.isRoot;
+    }
+    public GameObject DataToObject(GameObject prefabs,Transform parent)
+    {
+        GameObject newObject = MonoBehaviour.Instantiate(prefabs,parent);
+        newObject.transform.position = this.position;
+        newObject.transform.rotation = Quaternion.Euler(this.rotation);
+        
+        ObjectManager newManager = newObject.GetComponent<ObjectManager>();
+        
+        newManager.isRoot = this.root;
+        newManager.isEssential = this.essential;
+        return newObject;
+    }
 
 }
 
@@ -33,6 +55,13 @@ public struct StageObjectData
     //오브젝트 리스트
     public ObjectListData[] objectList;
 
+    public StageObjectData(int number,string turreinName, ObjectListData[] objectList)
+    {
+        this.number = number;
+        this.turreinName = turreinName;
+        this.objectList = objectList;
+        this.objectSize = objectList.Length;
+    }
 }
 //2017-08-01 SSK
 //UserMadeOjectData Class
