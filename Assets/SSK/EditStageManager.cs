@@ -47,6 +47,8 @@ public class  EditStageManager : MonoBehaviour {
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Comma))
+            debugMode();
         if (isEdit)
         {
             EditKeyInput();
@@ -80,6 +82,11 @@ public class  EditStageManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             ObejctChange(1);
+
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            ObejctChange(2);
 
         }
         if (Input.GetKeyDown(KeyCode.E))
@@ -134,8 +141,9 @@ public class  EditStageManager : MonoBehaviour {
         float v = Input.GetAxisRaw("Vertical");
         foreach (var current in wheels)
         {
-            current.AddTorque(Root.transform.right * v * speed);
-            current.AddTorque(Root.transform.up * h);
+            //current.AddTorque(-Root.transform.right * v * speed);
+            current.AddTorque(current.transform.up * v * speed);
+            current.AddTorque(Root.transform.up * h*5);
         }
     }
     public void AddObject(Transform SelectedObject, Vector3 position)
@@ -185,6 +193,8 @@ public class  EditStageManager : MonoBehaviour {
                 objListData[i] = new ObjectListData(objectList[i], 0);
             if (objectList[i].tag == "Wheel")
                 objListData[i] = new ObjectListData(objectList[i], 1);
+            if (objectList[i].tag == "FixedWheel")
+                objListData[i] = new ObjectListData(objectList[i], 2);
         }
         StageObjectData data = new StageObjectData(StageInt, name, objListData);
         DataManager.SaveToFile(data, name);
@@ -211,7 +221,7 @@ public class  EditStageManager : MonoBehaviour {
             {
                 Root = newObj;
             }
-            if (newObj.tag == "Wheel")
+            if (newObj.tag == "Wheel")// || newObj.tag == "FixedWheel")
             {
                 wheels.Add(newObj.GetComponent<Rigidbody>());
             }
@@ -275,6 +285,38 @@ public class  EditStageManager : MonoBehaviour {
         }
     }
     */
+    bool isDebug;
+    void debugMode()
+    {
+        ObjectManager[] objectList;
+        objectList = GetComponentsInChildren<ObjectManager>();
+        isDebug = !isDebug;
+        foreach (var currentObject in objectList)
+        {
+            if (currentObject.gameObject.tag == "Cube")
+            {
+                Rigidbody rigid= currentObject.GetComponent<Rigidbody>();
+                if (isDebug) {
+                    rigid.constraints = RigidbodyConstraints.FreezeAll;
+                    
+                }
+                else
+                {
+                    rigid.constraints = RigidbodyConstraints.None;
+                }
+                
+            }
+        }
+    }
+
+    Vector3 abs(Vector3 vec)
+    {
+        vec.x = Mathf.Abs(vec.x);
+        vec.y = Mathf.Abs(vec.y);
+        vec.z = Mathf.Abs(vec.z);
+        return vec;
+    }
+
     void connectJoint()
     {
         ObjectManager[] objectList;
@@ -304,8 +346,9 @@ public class  EditStageManager : MonoBehaviour {
                     cj.anchor = hit.point;
                     cj.anchor = hit.transform.InverseTransformPoint(currentObject.transform.position);
                     //cj.axis = hit.transform.InverseTransformPoint(hit.point);
-                    cj.axis = hit.transform.InverseTransformVector(Root.transform.right).normalized;
-                    cj.swingAxis = hit.transform.InverseTransformVector(Root.transform.right).normalized;
+                    
+                    cj.axis = hit.transform.InverseTransformVector(abs(hit.transform.position- hit.point)).normalized;
+                    cj.swingAxis = hit.transform.InverseTransformVector(Root.transform.up).normalized;
                     SoftJointLimit cjLtl = cj.lowTwistLimit;
                     SoftJointLimit cjHtl = cj.highTwistLimit;
                     cjLtl.limit = -177;
@@ -314,9 +357,9 @@ public class  EditStageManager : MonoBehaviour {
                     cjHtl.contactDistance = 100000;
                     SoftJointLimit cjS1l = cj.swing1Limit;
                     SoftJointLimit cjS2l = cj.swing2Limit;
-                    cjS1l.limit = 30;
+                    cjS1l.limit = 45;
                     cjS2l.limit = 0;
-                    cjS1l.contactDistance = 100000;
+                    cjS1l.contactDistance = 1;
                     cjS2l.contactDistance = 0;
                     cj.lowTwistLimit = cjLtl;
                     cj.highTwistLimit = cjHtl;
@@ -325,6 +368,16 @@ public class  EditStageManager : MonoBehaviour {
 
                     //cj.swingAxis = Vector3.forward;
                 }
+                if (currentObject.gameObject.tag == "FixedWheel" && hit.rigidbody.gameObject.tag == "Cube")
+                {
+
+                    HingeJoint fj = currentObject.gameObject.AddComponent<HingeJoint>();
+                    fj.connectedBody = hit.rigidbody;
+                    fj.axis = Vector3.up;
+                    
+                    //cj.swingAxis = Vector3.forward;
+                }
+
             }
         }
     }

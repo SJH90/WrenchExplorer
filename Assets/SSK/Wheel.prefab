@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4433795397406350}
   - component: {fileID: 33672085243625434}
   - component: {fileID: 23022598693186160}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 114532315998190360}
   - component: {fileID: 54693760018877864}
   - component: {fileID: 114806478730837074}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Wheel
   m_TagString: Wheel
   m_Icon: {fileID: 0}
@@ -60,13 +60,13 @@ GameObject:
   - component: {fileID: 33376053809753408}
   - component: {fileID: 65990842526415502}
   - component: {fileID: 23631002686488974}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4433795397406350
 Transform:
   m_ObjectHideFlags: 1
@@ -246,7 +246,7 @@ BoxCollider:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1978290916649656}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 622245f354e1e894290c03d13e7ac119, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -285,7 +285,7 @@ SphereCollider:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1867517970221458}
-  m_Material: {fileID: 13400000, guid: 3375300cee86b3d41bf6fef177346110, type: 2}
+  m_Material: {fileID: 13400000, guid: 622245f354e1e894290c03d13e7ac119, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
