@@ -1,8 +1,4 @@
 sceneSetups:
-<<<<<<< HEAD
 - path: Assets/JHS/Scenes/mainScene.unity
-=======
-- path: Assets/SSK/test.unity
->>>>>>> b34278d6929fc12b9ca91b463e6d5cbaa7c0f736
   isLoaded: 1
   isActive: 1
