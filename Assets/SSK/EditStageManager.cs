@@ -128,14 +128,14 @@ public class  EditStageManager : MonoBehaviour {
     }
     void StageMove()
     {
-        float speed = 500f;
+        float speed = 1000f;
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         foreach (var current in wheels)
         {
             current.AddTorque(Root.transform.right * v * speed);
-            current.AddTorque(Root.transform.up * h * speed);
+            current.AddTorque(Root.transform.up * h);
         }
     }
     public void AddObject(Transform SelectedObject, Vector3 position)
@@ -292,9 +292,38 @@ public class  EditStageManager : MonoBehaviour {
                 //print(currentObject.gameObject.tag+ hit.rigidbody.gameObject.tag);
                 if(currentObject.gameObject.tag == "Wheel" && hit.rigidbody.gameObject.tag=="Cube")
                 {
-                    HingeJoint fj = currentObject.gameObject.AddComponent<HingeJoint>();
-                    fj.connectedBody = hit.rigidbody;
-                    fj.axis = Vector3.up;
+
+                    //HingeJoint fj = currentObject.gameObject.AddComponent<HingeJoint>();
+                    //fj.connectedBody = hit.rigidbody;
+                    //fj.axis = Vector3.up;
+                    
+                    CharacterJoint cj=hit.rigidbody.gameObject.AddComponent<CharacterJoint>();
+                    cj.connectedBody = currentObject.GetComponent<Rigidbody>();
+                    cj.autoConfigureConnectedAnchor = false;
+                    cj.connectedAnchor = Vector3.zero;
+                    cj.anchor = hit.point;
+                    cj.anchor = hit.transform.InverseTransformPoint(currentObject.transform.position);
+                    //cj.axis = hit.transform.InverseTransformPoint(hit.point);
+                    cj.axis = hit.transform.InverseTransformVector(Root.transform.right).normalized;
+                    cj.swingAxis = hit.transform.InverseTransformVector(Root.transform.right).normalized;
+                    SoftJointLimit cjLtl = cj.lowTwistLimit;
+                    SoftJointLimit cjHtl = cj.highTwistLimit;
+                    cjLtl.limit = -177;
+                    cjLtl.contactDistance = 100000;
+                    cjHtl.limit = 177;
+                    cjHtl.contactDistance = 100000;
+                    SoftJointLimit cjS1l = cj.swing1Limit;
+                    SoftJointLimit cjS2l = cj.swing2Limit;
+                    cjS1l.limit = 30;
+                    cjS2l.limit = 0;
+                    cjS1l.contactDistance = 100000;
+                    cjS2l.contactDistance = 0;
+                    cj.lowTwistLimit = cjLtl;
+                    cj.highTwistLimit = cjHtl;
+                    cj.swing1Limit = cjS1l;
+                    cj.swing2Limit = cjS2l;
+
+                    //cj.swingAxis = Vector3.forward;
                 }
             }
         }
