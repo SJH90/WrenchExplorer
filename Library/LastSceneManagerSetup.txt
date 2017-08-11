@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/LBK/scene1.unity
+- path: Assets/JHS/Scenes/mainScene.unity
   isLoaded: 1
   isActive: 1

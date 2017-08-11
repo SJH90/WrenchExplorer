@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -108,6 +108,88 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &7360460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 7360464}
+  - component: {fileID: 7360463}
+  - component: {fileID: 7360462}
+  - component: {fileID: 7360461}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &7360461
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 7360460}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!135 &7360462
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 7360460}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &7360463
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 7360460}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &7360464
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 7360460}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.91301227, y: 3.0241318, z: -38.115402}
+  m_LocalScale: {x: -10, y: -10, z: -10}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &202752525
 GameObject:
   m_ObjectHideFlags: 0
@@ -218,13 +300,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b507e008386fb74389e62d50c2054a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Head: {fileID: 2073818947}
-  t_MainMenu: {fileID: 1047613753}
-  t_GameMenu: {fileID: 1423391938}
-  t_ScenarioMenu: {fileID: 1728302378}
-  t_ChallengeMenu: {fileID: 624163684}
-  m_VRInteractivrItem: {fileID: 0}
-  isup: 1
 --- !u!4 &444096352
 Transform:
   m_ObjectHideFlags: 0
@@ -1260,13 +1335,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b507e008386fb74389e62d50c2054a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Head: {fileID: 0}
-  t_MainMenu: {fileID: 0}
-  t_GameMenu: {fileID: 0}
-  t_ScenarioMenu: {fileID: 0}
-  t_ChallengeMenu: {fileID: 0}
-  m_VRInteractivrItem: {fileID: 1685585681}
-  isup: 1
 --- !u!114 &1685585681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1619,11 +1687,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e7ea39e3f8171349b8a9de0f933b19c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &2073818947 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1241284146417878, guid: d540947fd55fa3e4b9c1524a0dbf783c,
-    type: 2}
-  m_PrefabInternal: {fileID: 1801996096}
 --- !u!1 &2121723942
 GameObject:
   m_ObjectHideFlags: 0
