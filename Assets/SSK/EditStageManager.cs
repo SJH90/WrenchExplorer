@@ -34,6 +34,7 @@ public class  EditStageManager : MonoBehaviour {
     }
     private void Awake()
     {
+        
         selectedObject = prefabs[0];
         selectedObjectprev = prefabsPrev[0];
         selectedObjectRotate = Quaternion.Euler(new Vector3(0, 0, 0));
@@ -43,6 +44,7 @@ public class  EditStageManager : MonoBehaviour {
         isEdit = true;
         ObjectSize = 1;
         wheels = new List<Rigidbody>();
+        
     }
 
     private void Update()
@@ -136,14 +138,16 @@ public class  EditStageManager : MonoBehaviour {
     void StageMove()
     {
         float speed = 1000f;
+        
 
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         foreach (var current in wheels)
         {
             //current.AddTorque(-Root.transform.right * v * speed);
-            current.AddTorque(current.transform.up * v * speed);
-            current.AddTorque(Root.transform.up * h*5);
+            current.AddTorque(Root.transform.up * h * 10);
+            current.AddTorque(abs(current.transform.up) * v * speed);
+            
         }
     }
     public void AddObject(Transform SelectedObject, Vector3 position)
@@ -217,6 +221,7 @@ public class  EditStageManager : MonoBehaviour {
         {
             //if(loaded.objectList[i].type==1)
             GameObject newObj= loaded.objectList[i].DataToObject(prefabs[loaded.objectList[i].type],gameObject.transform);
+            newObj.GetComponent<Rigidbody>().maxAngularVelocity = float.PositiveInfinity;
             if (newObj.GetComponent<ObjectManager>().isRoot)
             {
                 Root = newObj;
@@ -357,7 +362,7 @@ public class  EditStageManager : MonoBehaviour {
                     cjHtl.contactDistance = 100000;
                     SoftJointLimit cjS1l = cj.swing1Limit;
                     SoftJointLimit cjS2l = cj.swing2Limit;
-                    cjS1l.limit = 45;
+                    cjS1l.limit = 30;
                     cjS2l.limit = 0;
                     cjS1l.contactDistance = 1;
                     cjS2l.contactDistance = 0;
