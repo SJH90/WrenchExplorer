@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/SSK/test.unity
+- path: Assets/LBK/Scene/BKScene.unity
   isLoaded: 1
   isActive: 1
