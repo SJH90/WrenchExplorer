@@ -15,6 +15,8 @@ public class VRButtonScript : MonoBehaviour {
 
     private void OnEnable()
     {
+        m_VRInteractiveItem = GetComponent<VRInteractiveItem>();
+
         m_VRInteractiveItem.OnEnter += HandleEnter;
         m_VRInteractiveItem.OnExit += HandleExit;
     }
