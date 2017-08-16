@@ -1291,6 +1291,11 @@ Prefab:
       value: 
       objectReference: {fileID: 1566463649839662, guid: 4f9c29166ac38614f8d4b642a78880a6,
         type: 2}
+    - target: {fileID: 114746138563837256, guid: 6f7454bc50c30ea49bb31a6395fd1d65,
+        type: 2}
+      propertyPath: StageName
+      value: Test
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6f7454bc50c30ea49bb31a6395fd1d65, type: 2}
   m_IsPrefabParent: 0

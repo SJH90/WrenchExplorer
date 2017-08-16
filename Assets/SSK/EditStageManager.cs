@@ -9,7 +9,7 @@ public class  EditStageManager : MonoBehaviour {
     public GameObject selectedObjectprev;
     public Quaternion selectedObjectRotate;
     public ObjectManager m_CurrentObject;
-    string StageName;
+    public string StageName;
     int StageInt;
     [SerializeField]
     GameObject[] prefabs;
@@ -39,7 +39,7 @@ public class  EditStageManager : MonoBehaviour {
         selectedObjectprev = prefabsPrev[0];
         selectedObjectRotate = Quaternion.Euler(new Vector3(0, 0, 0));
         
-        StageName = "Test";
+        //StageName = "Test";
         StageInt = -1;
         isEdit = true;
         ObjectSize = 1;
@@ -145,7 +145,7 @@ public class  EditStageManager : MonoBehaviour {
         foreach (var current in wheels)
         {
             //current.AddTorque(-Root.transform.right * v * speed);
-            current.AddTorque(Root.transform.up * h * 10);
+            current.AddTorque(Root.transform.up * h * 1);
             current.AddTorque(abs(current.transform.up) * v * speed);
             
         }
