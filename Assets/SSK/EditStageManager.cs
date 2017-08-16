@@ -268,7 +268,7 @@ public class  EditStageManager : MonoBehaviour {
     }
     void StartEdit()
     {
-        cam.transform.position = new Vector3(0, 5, -5);
+        cam.transform.position = new Vector3(0, 0, 0);
         LoadObject(StageName + "temp");
         isEdit = true;
     }
