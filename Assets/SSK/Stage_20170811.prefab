@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 33347494364053524}
   - component: {fileID: 65206973272756756}
   - component: {fileID: 23695052886996070}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 33008076263351852}
   - component: {fileID: 114756975704399600}
   - component: {fileID: 114829846728991784}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: Cube1
   m_TagString: Cube
   m_Icon: {fileID: 0}
@@ -239,11 +239,14 @@ MonoBehaviour:
   selectedObjectprev: {fileID: 0}
   selectedObjectRotate: {x: 0, y: 0, z: 0, w: 0}
   m_CurrentObject: {fileID: 0}
+  StageName: Test
   prefabs:
   - {fileID: 1814238907717314, guid: a0971d9a1becdc747a8d6e0a71dea2d5, type: 2}
   - {fileID: 1867517970221458, guid: 160d45479d7000c448bebbd7cb7619c2, type: 2}
+  - {fileID: 1002732445026796, guid: 6143fe3bac030434d9091ea1d547bfd6, type: 2}
   prefabsPrev:
   - {fileID: 1590324514997446, guid: 8e15e712b98c5354faf0082d83641d58, type: 2}
+  - {fileID: 1566463649839662, guid: 4f9c29166ac38614f8d4b642a78880a6, type: 2}
   - {fileID: 1566463649839662, guid: 4f9c29166ac38614f8d4b642a78880a6, type: 2}
   cam: {fileID: 0}
   Root: {fileID: 1595744916282664}
