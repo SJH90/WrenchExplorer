@@ -38,7 +38,7 @@ public class  EditStageManager : MonoBehaviour {
         selectedObject = prefabs[0];
         selectedObjectprev = prefabsPrev[0];
         selectedObjectRotate = Quaternion.Euler(new Vector3(0, 0, 0));
-        
+        StageName=PlayerPrefs.GetString("StageName","Test");
         //StageName = "Test";
         StageInt = -1;
         isEdit = true;
@@ -55,6 +55,7 @@ public class  EditStageManager : MonoBehaviour {
         {
             EditKeyInput();
             EditStageRotate();
+            cam.transform.position = Vector3.zero;
         }
         else
         {
@@ -243,13 +244,13 @@ public class  EditStageManager : MonoBehaviour {
     }
     void camMoveFront()
     {
-        if(cam.position.x - transform.position.x > 1)
-            cam.position -= Vector3.left * 0.1f ;
+        if(cam.position.z - transform.position.z > 1)
+            cam.position -= Vector3.forward * 0.1f ;
     }
     void camMoveBack()
     {
-        if (cam.position.x - transform.position.x < 20)
-            cam.position -= Vector3.right * 0.1f;
+        if (cam.position.z - transform.position.z < 20)
+            cam.position -= Vector3.back * 0.1f;
     }
     void StartStage()
     {
@@ -268,7 +269,7 @@ public class  EditStageManager : MonoBehaviour {
     }
     void StartEdit()
     {
-        cam.transform.position = new Vector3(0, 0, 0);
+        cam.transform.position = Vector3.zero;
         LoadObject(StageName + "temp");
         isEdit = true;
     }
