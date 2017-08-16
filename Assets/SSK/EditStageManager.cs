@@ -137,7 +137,7 @@ public class  EditStageManager : MonoBehaviour {
     }
     void StageMove()
     {
-        float speed = 1000f;
+        float speed = 100f;
         
 
         float h = Input.GetAxisRaw("Horizontal");
@@ -226,7 +226,7 @@ public class  EditStageManager : MonoBehaviour {
             {
                 Root = newObj;
             }
-            if (newObj.tag == "Wheel")// || newObj.tag == "FixedWheel")
+            if (newObj.tag == "Wheel" || newObj.tag == "FixedWheel")
             {
                 wheels.Add(newObj.GetComponent<Rigidbody>());
             }
@@ -362,7 +362,7 @@ public class  EditStageManager : MonoBehaviour {
                     cjHtl.contactDistance = 100000;
                     SoftJointLimit cjS1l = cj.swing1Limit;
                     SoftJointLimit cjS2l = cj.swing2Limit;
-                    cjS1l.limit = 30;
+                    cjS1l.limit = 20;
                     cjS2l.limit = 0;
                     cjS1l.contactDistance = 1;
                     cjS2l.contactDistance = 0;
