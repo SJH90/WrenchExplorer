@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIButtonScript : MonoBehaviour {
 
@@ -22,9 +23,9 @@ public class UIButtonScript : MonoBehaviour {
             case "Start":
                 MMS.targetPosition = MMS.t_GameMenu.position;
                 break;
-            case "Editor":
-                PlayerPrefs.SetString("StageName", "Editor");
-
+            case "Edit":
+                PlayerPrefs.SetString("StageName", "Test");
+                SceneManager.LoadScene("gameScene");
                 break;
             case "Option":
 
