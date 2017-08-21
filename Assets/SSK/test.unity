@@ -1261,6 +1261,11 @@ Prefab:
       propertyPath: m_Name
       value: Stage
       objectReference: {fileID: 0}
+    - target: {fileID: 114746138563837256, guid: 6f7454bc50c30ea49bb31a6395fd1d65,
+        type: 2}
+      propertyPath: ter
+      value: 
+      objectReference: {fileID: 1112357900}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6f7454bc50c30ea49bb31a6395fd1d65, type: 2}
   m_IsPrefabParent: 0
@@ -6247,7 +6252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!154 &1112357899
 TerrainCollider:
   m_ObjectHideFlags: 0

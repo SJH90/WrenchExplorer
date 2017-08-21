@@ -10,6 +10,7 @@ public class  EditStageManager : MonoBehaviour {
     public Quaternion selectedObjectRotate;
     public ObjectManager m_CurrentObject;
     public string StageName;
+    public GameObject ter;
     int StageInt;
     [SerializeField]
     GameObject[] prefabs;
@@ -43,6 +44,14 @@ public class  EditStageManager : MonoBehaviour {
         StageInt = -1;
         isEdit = true;
         ObjectSize = 1;
+        //Destroy(ter);
+        print("Terrains/" + StageName);
+        //UnityEngine.Object ob = Resources.Load("Terrains/" + StageName,typeof(TerrainData));
+        //BK Basic Terrain Data
+        TerrainData td= Resources.Load<TerrainData>("Terrains/" + StageName);
+        print(td);
+        ter = Terrain.CreateTerrainGameObject(td);
+        ter.transform.position = new Vector3(-100, -10, -100);
         wheels = new List<Rigidbody>();
         
     }
@@ -67,7 +76,7 @@ public class  EditStageManager : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-             StartStage();
+            StartStage();
         }
         if (Input.GetKey(KeyCode.T))
         {
@@ -101,7 +110,7 @@ public class  EditStageManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.R))
         {
             selectedObjectRotate *= Quaternion.Euler(new Vector3(0, 0, 90));
-            
+
         }
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -114,6 +123,16 @@ public class  EditStageManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.P))
         {
             LoadObject(StageName);
+        }
+        if (Input.GetKeyDown(KeyCode.Semicolon))
+        {
+            //Destroy(ter);
+            
+            TerrainData td = Resources.Load<TerrainData>("Terrains/BK Basic Terrain Data");
+            //print(td);
+            Terrain.DestroyObject(ter);
+            ter = Terrain.CreateTerrainGameObject(td);
+            ter.transform.position = new Vector3(-100, -10, -100);
         }
     }
     void StageKeyInput()
