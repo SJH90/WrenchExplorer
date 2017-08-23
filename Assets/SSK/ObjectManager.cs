@@ -33,8 +33,24 @@ public class ObjectManager : MonoBehaviour {
         m_VRInteractiveItem.OnOver += HandleOver;
         m_VRInteractiveItem.OnExit += HandleExit;
         m_VRInteractiveItem.OnClick += HandleClick;
+        Fixeds = new FixedJoint[0];
+        
+    }
+    FixedJoint[] Fixeds;
+    public void StartStageInit()
+    {
+        Fixeds = GetComponentsInChildren<FixedJoint>();
+    }
+    public void StartEditInit()
+    {
+        
     }
 
+    public void Update()
+    {
+        if(Fixeds.Length>0)
+            print(Fixeds);
+    }
 
     public void HandleEnter()
     {

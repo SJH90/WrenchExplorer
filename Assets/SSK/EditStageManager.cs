@@ -40,22 +40,18 @@ public class  EditStageManager : MonoBehaviour {
         selectedObjectprev = prefabsPrev[0];
         selectedObjectRotate = Quaternion.Euler(new Vector3(0, 0, 0));
         StageName=PlayerPrefs.GetString("StageName","Test");
-        //StageName = "Test";
         StageInt = -1;
         isEdit = true;
         ObjectSize = 1;
-        //Destroy(ter);
-        print("Terrains/" + StageName);
-        //UnityEngine.Object ob = Resources.Load("Terrains/" + StageName,typeof(TerrainData));
-        //BK Basic Terrain Data
         TerrainData td= Resources.Load<TerrainData>("Terrains/" + StageName);
         print(td);
         ter = Terrain.CreateTerrainGameObject(td);
-        ter.transform.position = new Vector3(-100, -10, -100);
+        ter.transform.position = new Vector3(-250, -10, -250);
         wheels = new List<Rigidbody>();
         
     }
-
+    float upPosition=5;
+    float fowardPosition=5;
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Comma))
@@ -64,12 +60,12 @@ public class  EditStageManager : MonoBehaviour {
         {
             EditKeyInput();
             EditStageRotate();
-            cam.transform.position = Vector3.zero;
+            //cam.transform.position = Vector3.zero;
         }
         else
         {
             StageKeyInput();
-            cam.transform.position = Root.transform.position + new Vector3(0, 5, -5);
+            cam.transform.position = Root.transform.position + Root.transform.up * upPosition + Root.transform.forward * -fowardPosition;
         }
     }
     private void EditKeyInput()
@@ -126,13 +122,11 @@ public class  EditStageManager : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.Semicolon))
         {
-            //Destroy(ter);
             
             TerrainData td = Resources.Load<TerrainData>("Terrains/BK Basic Terrain Data");
-            //print(td);
             Terrain.DestroyObject(ter);
             ter = Terrain.CreateTerrainGameObject(td);
-            ter.transform.position = new Vector3(-100, -10, -100);
+            ter.transform.position = new Vector3(-250, -10, -250);
         }
     }
     void StageKeyInput()
@@ -157,7 +151,7 @@ public class  EditStageManager : MonoBehaviour {
     }
     void StageMove()
     {
-        float speed = 100f;
+        float speed = 50f;
         
 
         float h = Input.GetAxisRaw("Horizontal");
@@ -165,14 +159,13 @@ public class  EditStageManager : MonoBehaviour {
         foreach (var current in wheels)
         {
             //current.AddTorque(-Root.transform.right * v * speed);
-            current.AddTorque(Root.transform.up * h * 1);
+            current.AddTorque(Root.transform.up * h * 10);
             current.AddTorque(abs(current.transform.up) * v * speed);
             
         }
     }
     public void AddObject(Transform SelectedObject, Vector3 position)
     {
-        //print(SelectedObject);
         if (selectedObject != null && SelectedObject.tag !="Wheel")
         {
             GameObject newObj = Instantiate(selectedObject, SelectedObject.root);
@@ -263,12 +256,13 @@ public class  EditStageManager : MonoBehaviour {
     }
     void camMoveFront()
     {
-        if(cam.position.z - transform.position.z > 1)
+        //print(cam.position.z - transform.position.z);
+        if(Mathf.Abs(cam.position.z - transform.position.z) >1)
             cam.position -= Vector3.forward * 0.1f ;
     }
     void camMoveBack()
     {
-        if (cam.position.z - transform.position.z < 20)
+        if (Mathf.Abs(cam.position.z - transform.position.z) < 20)
             cam.position -= Vector3.back * 0.1f;
     }
     void StartStage()
@@ -285,31 +279,21 @@ public class  EditStageManager : MonoBehaviour {
         }
         cam.transform.position = Root.transform.position +new Vector3(0, 0, -5);
         isEdit = false;
+        foreach(var com in GetComponentsInChildren<ObjectManager>())
+        {
+            com.StartStageInit();
+        }
     }
     void StartEdit()
     {
         cam.transform.position = Vector3.zero;
         LoadObject(StageName + "temp");
         isEdit = true;
-    }
-    /*
-    void connectJoint()
-    {
-        ObjectManager[] objectList;
-        objectList = GetComponentsInChildren<ObjectManager>();
-        for(int i = 0; i < objectList.Length-1; i++)
+        foreach (var com in GetComponentsInChildren<ObjectManager>())
         {
-            for (int j = i+1; j < objectList.Length; j++)
-            {
-                if((objectList[i].Position - objectList[j].Position).magnitude <= 1.1f)
-                {
-                    FixedJoint fj= objectList[i].gameObject.AddComponent<FixedJoint>();
-                    fj.connectedBody = objectList[j].GetComponent<Rigidbody>();
-                }
-            }
+            com.StartEditInit();
         }
     }
-    */
     bool isDebug;
     void debugMode()
     {
@@ -356,42 +340,33 @@ public class  EditStageManager : MonoBehaviour {
                     FixedJoint fj = currentObject.gameObject.AddComponent<FixedJoint>();
                     fj.connectedBody = hit.rigidbody;
                 }
-                //print(currentObject.gameObject.tag+ hit.rigidbody.gameObject.tag);
                 if(currentObject.gameObject.tag == "Wheel" && hit.rigidbody.gameObject.tag=="Cube")
                 {
-
-                    //HingeJoint fj = currentObject.gameObject.AddComponent<HingeJoint>();
-                    //fj.connectedBody = hit.rigidbody;
-                    //fj.axis = Vector3.up;
-                    
                     CharacterJoint cj=hit.rigidbody.gameObject.AddComponent<CharacterJoint>();
                     cj.connectedBody = currentObject.GetComponent<Rigidbody>();
                     cj.autoConfigureConnectedAnchor = false;
                     cj.connectedAnchor = Vector3.zero;
                     cj.anchor = hit.point;
                     cj.anchor = hit.transform.InverseTransformPoint(currentObject.transform.position);
-                    //cj.axis = hit.transform.InverseTransformPoint(hit.point);
                     
                     cj.axis = hit.transform.InverseTransformVector(abs(hit.transform.position- hit.point)).normalized;
                     cj.swingAxis = hit.transform.InverseTransformVector(Root.transform.up).normalized;
                     SoftJointLimit cjLtl = cj.lowTwistLimit;
                     SoftJointLimit cjHtl = cj.highTwistLimit;
                     cjLtl.limit = -177;
-                    cjLtl.contactDistance = 100000;
+                    cjLtl.contactDistance = 500;
                     cjHtl.limit = 177;
-                    cjHtl.contactDistance = 100000;
+                    cjHtl.contactDistance = 500;
                     SoftJointLimit cjS1l = cj.swing1Limit;
                     SoftJointLimit cjS2l = cj.swing2Limit;
                     cjS1l.limit = 20;
                     cjS2l.limit = 0;
-                    cjS1l.contactDistance = 1;
+                    cjS1l.contactDistance = 0;
                     cjS2l.contactDistance = 0;
                     cj.lowTwistLimit = cjLtl;
                     cj.highTwistLimit = cjHtl;
                     cj.swing1Limit = cjS1l;
                     cj.swing2Limit = cjS2l;
-
-                    //cj.swingAxis = Vector3.forward;
                 }
                 if (currentObject.gameObject.tag == "FixedWheel" && hit.rigidbody.gameObject.tag == "Cube")
                 {
@@ -400,7 +375,6 @@ public class  EditStageManager : MonoBehaviour {
                     fj.connectedBody = hit.rigidbody;
                     fj.axis = Vector3.up;
                     
-                    //cj.swingAxis = Vector3.forward;
                 }
 
             }
