@@ -14,6 +14,7 @@ public class MouseRaycast : MonoBehaviour
     [SerializeField]
     private Transform m_Reticle;
 
+    [SerializeField]
     private VRInteractiveItem m_CurrentInteractiveItem;
 
 

@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 81769433077362786}
   - component: {fileID: 114216961249342958}
   - component: {fileID: 114688057930502048}
+  - component: {fileID: 114247551744215046}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -208,13 +209,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_DoubleClickTime: 0.3
   m_SwipeWidth: 0.3
---- !u!114 &114688057930502048
+--- !u!114 &114247551744215046
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1961817948585820}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a4b5182300ea6b4ab4347b00ea5b58a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_VRInput: {fileID: 114216961249342958}
+  m_Camera: {fileID: 4702094526643292}
+  m_Reticle: {fileID: 4873122232333786}
+  m_CurrentInteractiveItem: {fileID: 0}
+--- !u!114 &114688057930502048
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1961817948585820}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71591258de1327b419abc1736c388172, type: 3}
   m_Name: 
