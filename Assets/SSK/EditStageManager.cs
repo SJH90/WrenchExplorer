@@ -160,7 +160,9 @@ public class  EditStageManager : MonoBehaviour {
         {
             //current.AddTorque(-Root.transform.right * v * speed);
             current.AddTorque(Root.transform.up * h * 10);
-            current.AddTorque(abs(current.transform.up) * v * speed);
+            current.AddTorque(Root.transform.right * v * speed);
+            //current.AddTorque(abs(current.transform.up) * v * speed);
+            //print(abs(current.transform.up));
             
         }
     }

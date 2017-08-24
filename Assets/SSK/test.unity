@@ -4513,7 +4513,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1867517970221458, guid: 160d45479d7000c448bebbd7cb7619c2, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 160d45479d7000c448bebbd7cb7619c2, type: 2}
@@ -6145,15 +6145,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4559740501957906, guid: 160d45479d7000c448bebbd7cb7619c2, type: 2}
       propertyPath: m_RootOrder
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1867517970221458, guid: 160d45479d7000c448bebbd7cb7619c2, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 54693760018877864, guid: 160d45479d7000c448bebbd7cb7619c2,
-        type: 2}
-      propertyPath: m_AngularDrag
       value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -9942,7 +9933,7 @@ CharacterJoint:
     spring: 0
     damper: 0
   m_Swing1Limit:
-    limit: 10
+    limit: 0
     bounciness: 0
     contactDistance: 0
   m_Swing2Limit:

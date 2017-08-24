@@ -48,8 +48,8 @@ public class ObjectManager : MonoBehaviour {
 
     public void Update()
     {
-        if(Fixeds.Length>0)
-            print(Fixeds);
+        //if(Fixeds.Length>0)
+            //print(Fixeds);
     }
 
     public void HandleEnter()
