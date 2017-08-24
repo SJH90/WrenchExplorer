@@ -43,9 +43,12 @@ public class  EditStageManager : MonoBehaviour {
         StageInt = -1;
         isEdit = true;
         ObjectSize = 1;
-        TerrainData td= Resources.Load<TerrainData>("Terrains/" + StageName);
-        print(td);
-        ter = Terrain.CreateTerrainGameObject(td);
+        TerrainData td1 = Resources.Load<TerrainData>("Terrains/BK Basic Terrain Data");
+        Terrain.DestroyObject(ter);
+        ter = Terrain.CreateTerrainGameObject(td1);
+        ter.transform.position = new Vector3(-250, -10.002f, -250);
+        TerrainData td2= Resources.Load<TerrainData>("Terrains/" + StageName);
+        ter = Terrain.CreateTerrainGameObject(td2);
         ter.transform.position = new Vector3(-250, -10, -250);
         wheels = new List<Rigidbody>();
         
@@ -119,14 +122,6 @@ public class  EditStageManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.P))
         {
             LoadObject(StageName);
-        }
-        if (Input.GetKeyDown(KeyCode.Semicolon))
-        {
-            
-            TerrainData td = Resources.Load<TerrainData>("Terrains/BK Basic Terrain Data");
-            Terrain.DestroyObject(ter);
-            ter = Terrain.CreateTerrainGameObject(td);
-            ter.transform.position = new Vector3(-250, -10, -250);
         }
     }
     void StageKeyInput()
